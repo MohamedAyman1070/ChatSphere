@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 export default function OptionMenu() {
   return (
     <motion.div
-      className="absolute rounded w-40 text-white p-2  bg-listItem right-2"
+      className="absolute rounded w-40 text-white p-2 z-50  bg-listItem right-2"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
