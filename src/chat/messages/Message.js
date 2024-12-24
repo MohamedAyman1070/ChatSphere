@@ -2,20 +2,16 @@ import TextExpander from "../../fregments/others/TextExpander";
 import MessageLeftTail from "./MessageLeftTail";
 import MessageRightTail from "./MessageRightTail";
 import UserInfo from "../../fregments/others/UserInfo";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthProvider";
 
 export default function Message({ message, isInGroup }) {
-  // just for example
-  // const currUser = {
-  //   name: "John",
-  //   image:
-  //     "https://th.bing.com/th/id/OIP.VTBzGQySOYLDke_xg2OfEQHaFj?w=244&h=183&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-  // };
-
-  const currUser = JSON.parse(localStorage.getItem("user"));
-
-  const otherMessageStyle = "flex p-4 gap-8  items-center w-full  h-fit ";
+  const { auth } = useContext(AuthContext);
+  const currUser = auth;
+  console.log("in group", isInGroup);
+  const otherMessageStyle = "flex  gap-8 p-6   items-center w-full  h-fit ";
   const myMessageStyle =
-    "flex p-4 gap-8  items-center w-full  h-fit    flex flex-row-reverse";
+    "flex  gap-8  items-center  w-full  h-fit p-6   flex flex-row-reverse";
 
   let style =
     currUser.slug === message.owner.slug ? myMessageStyle : otherMessageStyle;

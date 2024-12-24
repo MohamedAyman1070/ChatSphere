@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SimpleBtn from "../../fregments/buttons/SimpleBtn";
 import Textbox from "../../fregments/inputs/Textbox";
 import axios from "axios";
 import { clear } from "@testing-library/user-event/dist/clear";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
 
 export default function LoginForm() {
+  const { setAuth } = useContext(AuthContext);
   const [errFromServer, setErrFromServer] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   function reset() {
     setErrFromServer("");
     setEmailError("");
@@ -46,8 +49,9 @@ export default function LoginForm() {
             "http://localhost:8000/api/auth/user"
           );
           const user = user_res.data.user;
-          console.log(user);
-          localStorage.setItem("user", JSON.stringify(user));
+          sessionStorage.setItem("user", JSON.stringify(user));
+          setAuth(user);
+          navigate("home");
         }
       } catch (err) {
         console.log(err.response?.data);

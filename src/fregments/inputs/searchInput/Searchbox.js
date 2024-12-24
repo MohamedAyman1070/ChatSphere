@@ -1,9 +1,9 @@
 import Item from "./Item";
 
 export default function Searcbox({ placeholder, setState, results }) {
-  console.log(results);
+  // console.log(results);
   return (
-    <div className="rounded-2xl w-full z-50 bg-textbox p-2 flex flex-col gap-2">
+    <div className="rounded-2xl w-full z-40 bg-textbox p-2 flex flex-col gap-2">
       <input
         type="text"
         placeholder={placeholder}

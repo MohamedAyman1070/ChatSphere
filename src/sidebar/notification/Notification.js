@@ -4,7 +4,7 @@ import useClickOutsideEvent from "../../hooks/useClickOutsideEvent";
 import axios from "axios";
 
 export default function Notification({
-  OnRefetchFriends,
+  OnRefetchItems,
   hasNewRequest,
   notifyAction,
 }) {
@@ -47,7 +47,7 @@ export default function Notification({
     }
     acceptRequest();
     setRequests((curr) => curr.filter((req) => req.id !== requestObj.id));
-    OnRefetchFriends((c) => !c);
+    OnRefetchItems((c) => !c);
   }
   function handleDeclineRequest(requestObj) {
     async function declineRequest() {

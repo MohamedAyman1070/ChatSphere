@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Searchbox from "../fregments/inputs/searchInput/Searchbox";
 import { motion } from "motion/react";
 import axios from "axios";
 import useSearch from "../hooks/useSearch";
 import Notification from "./notification/Notification";
 import Form from "./Form";
-import Item from "./Item";
-export default function Sidebar({
-  children,
-  show = false,
-  selectedItem,
-  OnRefetchFriends,
-  OnSelectItem,
-  items = [],
-  notifications,
-  notifyAction,
-}) {
+import FriendList from "./friendsList/FriendList";
+import GroupList from "./groupsList/GroupList";
+import { DataContext } from "../context/DataProvider";
+
+export default function Sidebar() {
+  const {
+    selectedItem,
+    OnRefetchItems,
+    OnSelectItem,
+    items,
+    notifications,
+    notifyAction,
+  } = useContext(DataContext);
   const [query, setQuery] = useState("");
   const [showFrom, setShowFrom] = useState(false);
 
@@ -27,6 +29,7 @@ export default function Sidebar({
   const sidebarStyle = selectedItem
     ? "flex flex-col sm:static fixed z-40 h-full sm:mt-0  mt-16 sm:w-96 w-full  "
     : "flex flex-col sm:static fixed h-full  sm:mt-0 mt-12 sm:w-96 w-full  ";
+
   return (
     <motion.div
       className={sidebarStyle}
@@ -36,7 +39,7 @@ export default function Sidebar({
     >
       <div className={divIconsStyle}>
         <Notification
-          OnRefetchFriends={OnRefetchFriends}
+          OnRefetchItems={OnRefetchItems}
           hasNewRequest={notifications.hasNewRequest}
           notifyAction={notifyAction}
         />
@@ -65,10 +68,11 @@ export default function Sidebar({
         className="flex flex-col h-full  bg-customBlue overflow-auto 
     hide-scrollbar"
       >
-        {items?.length > 0 ? (
-          items.map((item, k) => (
-            <Item item={item} key={k} OnSelectItem={OnSelectItem} />
-          ))
+        {items.friends?.length > 0 || items.groups?.length > 0 ? (
+          <>
+            <FriendList list={items.friends} OnSelectItem={OnSelectItem} />
+            <GroupList list={items.groups} OnSelectItem={OnSelectItem} />
+          </>
         ) : (
           <img src="/placeholder.png" alt="not found" className="m-auto" />
         )}

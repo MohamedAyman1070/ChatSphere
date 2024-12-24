@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import UserInfo from "../fregments/others/UserInfo";
+import UserInfo from "../../fregments/others/UserInfo";
 import axios from "axios";
 
-export default function Item({
+export default function FriendItem({
   item,
   unreadMessage = false,
   sendRequest = false,

@@ -1,20 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Searchbox from "../fregments/inputs/searchInput/Searchbox";
 import UserInfo from "../fregments/others/UserInfo";
 import MenuIcon from "./MenuIcon";
 import OptionMenu from "./OptionMenu";
 import { AnimatePresence, motion } from "motion/react";
 import useSearch from "../hooks/useSearch";
+import { DataContext } from "../context/DataProvider";
 
-export default function Header({
-  selectedItem,
-  showSidebar,
-  setShowSidebar,
-  notifications,
-}) {
+export default function Header() {
+  const { selectedItem, setShowSidebar, notifications } =
+    useContext(DataContext);
   const [showOptionMenue, setShowOptionMenue] = useState(false);
   const [query, setQuery] = useState("");
   const results = useSearch(query);
+  // console.log(selectedItem?.friend);
   return (
     <motion.div
       // initial={{ x: 0 }}
@@ -23,9 +22,10 @@ export default function Header({
       className="bg-headerColor p-2 flex  h-fit items-center gap-4 w-full"
     >
       <MenuIcon onShow={setShowSidebar} notifications={notifications} />
+
       {selectedItem ? (
         <div className="flex justify-between items-center w-full">
-          <UserInfo user={selectedItem.friend} gap={"gap-4"} />
+          <UserInfo user={selectedItem.friend ?? selectedItem} gap={"gap-4"} />
           <div className="relative ">
             <button
               className="p-2 cursor-pointer"
@@ -34,7 +34,7 @@ export default function Header({
               <i className="fa-solid fa-ellipsis-vertical fa-xl text-icons "></i>
             </button>
             <AnimatePresence>
-              {showOptionMenue && <OptionMenu />}
+              {showOptionMenue && <OptionMenu OnShow={showOptionMenue} />}
             </AnimatePresence>
           </div>
         </div>

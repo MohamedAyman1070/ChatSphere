@@ -6,7 +6,7 @@ export default function MenuIcon({ onShow, notifications }) {
   }
   return (
     <div
-      className="flex flex-col relative w-fit cursor-pointer gap-1"
+      className="flex flex-col relative  w-fit cursor-pointer gap-1"
       onClick={() => handleClick()}
     >
       {notifications.hasNotification && (

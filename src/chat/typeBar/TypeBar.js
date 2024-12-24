@@ -1,9 +1,11 @@
 import Emoji from "./Emoji";
 import Textbox from "../../fregments/inputs/Textbox";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { DataContext } from "../../context/DataProvider";
 
-export default function TypeBar({ selectedItem }) {
+export default function TypeBar({}) {
+  const { selectedItem } = useContext(DataContext);
   const [message, setMessage] = useState("");
   const textareaRef = useRef(null);
 
@@ -56,7 +58,7 @@ export default function TypeBar({ selectedItem }) {
             placeholder="Type a Message"
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
-          <div className="flex  items-end">
+          <div className="flex  items-center">
             <button className="m-1">
               <i className="fa-solid fa-image fa-xl text-icons"></i>
             </button>

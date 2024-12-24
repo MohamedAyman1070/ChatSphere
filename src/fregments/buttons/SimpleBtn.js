@@ -1,7 +1,7 @@
 export default function SimpleBtn({ children, onClick }) {
   return (
     <button
-      onClick={(e) => onClick(e)}
+      onClick={(e) => onClick?.(e)}
       className="bg-plum text-white 
     text-xl p-2 w-full rounded group overflow-hidden relative"
     >
