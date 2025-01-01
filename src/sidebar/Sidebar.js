@@ -8,6 +8,8 @@ import Form from "./Form";
 import FriendList from "./friendsList/FriendList";
 import GroupList from "./groupsList/GroupList";
 import { DataContext } from "../context/DataProvider";
+import CircelSpinner from "../fregments/spinners/CircleSpinner";
+import SimpleCircleSpinner from "../fregments/spinners/SimpleCircleSpinner";
 
 export default function Sidebar() {
   const {
@@ -17,6 +19,7 @@ export default function Sidebar() {
     items,
     notifications,
     notifyAction,
+    isLoadingItems,
   } = useContext(DataContext);
   const [query, setQuery] = useState("");
   const [showFrom, setShowFrom] = useState(false);
@@ -29,7 +32,6 @@ export default function Sidebar() {
   const sidebarStyle = selectedItem
     ? "flex flex-col sm:static fixed z-40 h-full sm:mt-0  mt-16 sm:w-96 w-full  "
     : "flex flex-col sm:static fixed h-full  sm:mt-0 mt-12 sm:w-96 w-full  ";
-
   return (
     <motion.div
       className={sidebarStyle}
@@ -65,10 +67,14 @@ export default function Sidebar() {
       )}
       {/* items list*/}
       <div
-        className="flex flex-col h-full  bg-customBlue overflow-auto 
+        className="flex flex-col h-full   bg-customBlue overflow-auto 
     hide-scrollbar"
       >
-        {items.friends?.length > 0 || items.groups?.length > 0 ? (
+        {isLoadingItems ? (
+          <div className="flex justify-center items-center h-full">
+            <SimpleCircleSpinner width="w-20" height="h-20" />
+          </div>
+        ) : items.friends?.length > 0 || items.groups?.length > 0 ? (
           <>
             <FriendList list={items.friends} OnSelectItem={OnSelectItem} />
             <GroupList list={items.groups} OnSelectItem={OnSelectItem} />

@@ -14,7 +14,7 @@ export default function FriendItem({
     <div
       className="flex justify-between flex-wrap items-center cursor-pointer p-4 bg-listItem hover:bg-plum transition duration-300 hover:scale-105  group 
           hover:shadow-xl hover:shadow-hoverPlum"
-      onClick={() => OnSelectItem((c) => item)}
+      // onClick={() => OnSelectItem((c) => item)}
     >
       <UserInfo user={item.friend} gap={"gap-4"} size={imgSize} />
       <div className="flex gap-2 items-center">

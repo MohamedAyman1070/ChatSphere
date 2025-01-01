@@ -8,18 +8,22 @@ import {
 import { AuthContext } from "./AuthProvider";
 import echo from "../echo";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export const DataContext = createContext({});
 
 export default function DataProvider({ children }) {
   const [showSidebar, setShowSidebar] = useState(false);
   const [refetchItems, setRefetchItems] = useState(false);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState({});
   const [selectedItem, setSelectedItem] = useState(null);
-  const [showToast, setShowToast] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [invetationTempURL, setInvetationTempURL] = useState(null);
+  const [isLoadingItems, setIsLoadingItems] = useState(false);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [userTyping, setUserTyping] = useState("");
   const { auth } = useContext(AuthContext);
   const user = auth;
-  console.log("from provider");
   function reducer(notifications, notify) {
     switch (notify.type) {
       case "notify-hasRequest":
@@ -28,6 +32,8 @@ export default function DataProvider({ children }) {
         return { ...notifications, hasNewRequest: false };
       case "notify-hasNewFriend":
         return { ...notifications, hasNewFriend: true };
+      case "notify-joinedGroup":
+        return { ...notifications, hasNewGroup: true };
       default:
         throw new Error("undefined notification type (" + notify.type + ")");
     }
@@ -36,8 +42,9 @@ export default function DataProvider({ children }) {
   const [notifications, dispatch] = useReducer(reducer, {
     hasNewRequest: false,
     hasNewFriend: false,
+    hasNewGroup: false,
     hasNotifications: function () {
-      return this.hasNewFriend || this.hasNewRequest;
+      return this.hasNewRequest;
     },
   });
 
@@ -78,7 +85,7 @@ export default function DataProvider({ children }) {
           dispatch({ type: "notify-hasRequest" });
         }
       } catch (err) {
-        console.log(err.response.data);
+        setToasts((c) => [...c, err?.response?.data?.message]);
       }
     }
     requests();
@@ -88,6 +95,7 @@ export default function DataProvider({ children }) {
   useEffect(() => {
     async function fetchFriends() {
       try {
+        setIsLoadingItems(true);
         const ApiItems = await axios.get(
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/friends-and-groups"
         );
@@ -96,7 +104,9 @@ export default function DataProvider({ children }) {
         setItems((c) => ApiItems.data);
         // console.log(ApiItems);
       } catch (err) {
-        console.log("err from items fetch : ", err?.response?.data);
+        setToasts((c) => [...c, err?.response?.data?.message]);
+      } finally {
+        setIsLoadingItems(false);
       }
     }
     fetchFriends();
@@ -113,6 +123,13 @@ export default function DataProvider({ children }) {
         notifyAction: dispatch,
         showSidebar,
         setShowSidebar,
+        isLoadingItems,
+        isSendingMessage,
+        setIsSendingMessage,
+        toasts,
+        setToasts,
+        userTyping,
+        setUserTyping,
       }}
     >
       {children}

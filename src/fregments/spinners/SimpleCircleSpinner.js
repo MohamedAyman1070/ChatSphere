@@ -1,5 +1,7 @@
-export default function SimpleCircleSpinner() {
-  return (
-    <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-blue-600" />
-  );
+export default function SimpleCircleSpinner({
+  width = "w-10",
+  height = "h-10",
+}) {
+  const style = `border-customBlue ${width} ${height} animate-spin rounded-full border-8 border-t-plum`;
+  return <div className={style} />;
 }

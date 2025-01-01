@@ -1,14 +1,29 @@
-export default function Toast({ onShowToast, color }) {
+import { useContext, useEffect, useState } from "react";
+import { DataContext } from "../../context/DataProvider";
+
+export default function Toast({ color, text }) {
+  const [show, setShow] = useState(true);
+  const { setToasts } = useContext(DataContext);
+  useEffect(() => {
+    setTimeout(() => {
+      setToasts((c) => c.filter((toast) => toast !== text));
+    }, 3000);
+  }, [text, setToasts]);
   return (
-    <div className="fixed z-50 top-20 right-5 flex flex-col gap-2">
-      <div className=" flex rounded bg-red-500 p-2  ">
-        <p>
-          <b>Warning:</b> this is a new toast lorem ipsum dolor sit amet,
-        </p>
-        <div className="">
-          <button onClick={() => onShowToast((c) => false)}>✖</button>
+    <>
+      {show && (
+        <div className=" z-50  flex flex-col gap-2">
+          <div className=" flex rounded justify-between gap-2 bg-headerColor p-2  ">
+            <p className="text-normalTextColor">
+              <b className="text-errColor">Error: </b>
+              {text}
+            </p>
+            <div className="">
+              <button onClick={() => setShow((c) => false)}>✖</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }

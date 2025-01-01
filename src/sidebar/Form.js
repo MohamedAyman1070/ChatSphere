@@ -3,11 +3,12 @@ import SimpleBtn from "../fregments/buttons/SimpleBtn";
 import Textbox from "../fregments/inputs/Textbox";
 import { useContext, useReducer, useState } from "react";
 import { DataContext } from "../context/DataProvider";
-
+import SimpleCircleSpinner from "../fregments/spinners/SimpleCircleSpinner";
 export default function Form({ setShowForm }) {
   // const onRefetchItems = null;
   const { OnRefetchItems, items } = useContext(DataContext);
-
+  const [image, setImage] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   function reducer(errors, action) {
     switch (action.type) {
       case "nameError":
@@ -16,15 +17,23 @@ export default function Form({ setShowForm }) {
         return { ...errors, description: action.errorMsg };
       case "statusError":
         return { ...errors, status: action.errorMsg };
+      case "imageError":
+        return { ...errors, image: action.errorMsg };
       default:
         throw new Error("Invalid action: " + action.type);
     }
   }
-  const [group, setGroup] = useState({ name: "", description: "", status: "" });
+  const [group, setGroup] = useState({
+    name: "",
+    description: "",
+    status: "",
+    image_url: "",
+  });
   const [errors, dispatch] = useReducer(reducer, {
     name: "",
     description: "",
     status: "",
+    image: "",
   });
 
   function hideForm(e) {
@@ -41,9 +50,37 @@ export default function Form({ setShowForm }) {
     setGroup({ ...group, status: status });
   }
 
+  async function uploadImage() {
+    if (image.size > 1024 * 1024) {
+      //2mb
+      dispatch({
+        type: "imageError",
+        errorMsg: "image size must be less than 2 mb",
+      });
+    }
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append(
+      "upload_preset",
+      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    );
+    // formData.append("folder", "Avatars");
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      formData,
+      {
+        withCredentials: false,
+        withXSRFToken: false,
+      }
+    );
+    const cloudImage = res.data;
+    return cloudImage.secure_url;
+  }
+
   async function handleCreateGroup(e) {
     try {
       e.preventDefault();
+      setIsLoading(true);
       console.log(group);
       if (group.name === "") {
         dispatch({ type: "nameError", errorMsg: "Group name is required" });
@@ -60,19 +97,31 @@ export default function Form({ setShowForm }) {
         dispatch({ type: "statusError", errorMsg: "Group status is required" });
         return;
       }
+      if (!image) {
+        dispatch({ type: "imageError", errorMsg: "Group image is required" });
+        return;
+      }
+      group.image_url = await uploadImage();
       const res = await axios.post(
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/groups",
         {
           name: group.name,
           description: group.description,
           status: group.status,
+          image_url: group.image_url,
         }
       );
       console.log(res);
       OnRefetchItems((c) => !c);
       setShowForm(false);
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err);
+      const errors = err?.response.data.errors;
+      for (let attr in errors) {
+        dispatch({ type: attr + "Error", errorMsg: errors[attr].pop() });
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -109,9 +158,28 @@ export default function Form({ setShowForm }) {
           <span className="text-errColor text-sm">{errors.status}</span>
         </div>
 
+        <div className="flex flex-col gap-1 mb-2 w-fit">
+          <label
+            htmlFor="upload"
+            className="bg-textbox text-normalTextColor cursor-pointer p-2 rounded "
+          >
+            Upload Image
+          </label>
+          <input
+            onChange={(e) => setImage(e.target.files[0])}
+            id="upload"
+            type="file"
+            hidden
+            accept="/image*"
+          />
+          <span className="text-errColor text-sm">{errors.image}</span>
+        </div>
+
         <div className="flex w-full justify-center">
           <div className="w-2/5">
-            <SimpleBtn>Save</SimpleBtn>
+            <SimpleBtn>
+              {!isLoading ? "Save" : <SimpleCircleSpinner />}
+            </SimpleBtn>
           </div>
         </div>
       </form>

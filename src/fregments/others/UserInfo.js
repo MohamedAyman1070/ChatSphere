@@ -12,9 +12,9 @@ export default function UserInfo({
 
   return (
     <div className={tailStyle}>
-      <img className={imgStyle} src={user.image} alt={user.name} />
+      <img className={imgStyle} src={user?.image} alt={user?.name} />
       <div className="flex flex-col">
-        <span className={textSize}>{user.name}</span>
+        <span className={textSize}>{user?.name}</span>
         <small className="text-normalTextColor">{msg}</small>
       </div>
     </div>

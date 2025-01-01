@@ -1,8 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
+import lodash from "lodash";
+/**
+ * @debrecated
+ */
 export default function useSearch(query = "") {
-  const [result, setResult] = useState({ groups: [], users: [] });
+  const [results, setResult] = useState({ groups: [], users: [] });
+
+  function debounceChange(e) {
+    console.log(e.target.value);
+  }
 
   useEffect(() => {
     async function search() {
@@ -11,6 +18,8 @@ export default function useSearch(query = "") {
           setResult({ groups: [], users: [] });
           return;
         }
+        console.log("sdfkjsd");
+
         const res = await axios.get(
           `http://localhost:8000/api/search?q=${query}`
         );
@@ -22,5 +31,5 @@ export default function useSearch(query = "") {
     }
     search();
   }, [query]);
-  return result;
+  return { results, debounceChange };
 }

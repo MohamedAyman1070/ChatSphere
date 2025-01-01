@@ -1,13 +1,19 @@
 import Emoji from "./Emoji";
 import Textbox from "../../fregments/inputs/Textbox";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { DataContext } from "../../context/DataProvider";
+import echo from "../../echo";
+import { AuthContext } from "../../context/AuthProvider";
+import { debounce } from "lodash";
 
 export default function TypeBar({}) {
-  const { selectedItem } = useContext(DataContext);
+  const { selectedItem, setIsSendingMessage, setToasts } =
+    useContext(DataContext);
   const [message, setMessage] = useState("");
+  const [imagesArray, setImagesArray] = useState([]);
   const textareaRef = useRef(null);
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -22,24 +28,74 @@ export default function TypeBar({}) {
     };
   }, []);
 
-  function handleSendMessage() {
-    console.log("typebar");
-    async function sendMessage() {
-      try {
-        const res = await axios.post(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/api/messages",
-          {
-            text: message,
-            socket_id: selectedItem.socket_id,
-          }
-        );
-        console.log("msg is sent");
-        setMessage((m) => "");
-      } catch (err) {
-        console.log(err);
-      }
+  async function uploadImage(image) {
+    if (image.size > 1024 * 1024) {
+      //2mb
+      //dispatch a toast
+      return;
     }
-    sendMessage();
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append(
+      "upload_preset",
+      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    );
+    // formData.append("folder", "Avatars");
+    try {
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        formData,
+        {
+          withCredentials: false,
+          withXSRFToken: false,
+        }
+      );
+      var cloudImage = res.data;
+    } catch (err) {
+      setToasts((c) => [...c, err?.response?.data?.message]);
+    }
+    return cloudImage.secure_url;
+  }
+
+  function handleOnChangeMessage(e) {
+    echo
+      .join(`message.${selectedItem?.socket_id}`)
+      .whisper("typing", { user: auth });
+    setMessage(e.target.value);
+    handleStopeTypeing();
+  }
+  const handleStopeTypeing = debounce(() => {
+    echo
+      .join(`message.${selectedItem?.socket_id}`)
+      .whisper("stoppedTyping", { user: auth });
+  }, 2000);
+
+  async function handleSendMessage() {
+    try {
+      setIsSendingMessage(true);
+      const msg = message;
+      setMessage((m) => "");
+      const asset_array = [];
+      if (imagesArray.length > 0) {
+        for (let image of imagesArray) {
+          asset_array.push(await uploadImage(image));
+        }
+      }
+      setImagesArray([]);
+      const res = await axios.post(
+        process.env.REACT_APP_BACKEND_DOMAIN + "/api/messages",
+        {
+          text: msg,
+          socket_id: selectedItem?.socket_id,
+          asset_array,
+        }
+      );
+      textareaRef.current.style.height = "2.5rem";
+    } catch (err) {
+      setToasts((c) => [...c, err?.response?.data?.message]);
+    } finally {
+      setIsSendingMessage(false);
+    }
   }
 
   return (
@@ -56,12 +112,26 @@ export default function TypeBar({}) {
             ref={textareaRef}
             className=" hide-scrollbar  p-2 bg-textbox  resize-none h-10 max-h-52  text-white outline-none w-full"
             placeholder="Type a Message"
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => handleOnChangeMessage(e)}
           ></textarea>
           <div className="flex  items-center">
-            <button className="m-1">
+            <label htmlFor="upload" className="m-1 cursor-pointer relative">
               <i className="fa-solid fa-image fa-xl text-icons"></i>
-            </button>
+              {imagesArray.length > 0 && (
+                <span className="text-xs rounded-full w-4 h-4 bg-plumButton text-center  text-normalTextColor absolute -top-2 right-3 ">
+                  {imagesArray.length}
+                </span>
+              )}
+            </label>
+            <input
+              id="upload"
+              hidden
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                setImagesArray((c) => [...c, e.target.files[0]]);
+              }}
+            />
           </div>
         </div>
         {/* send message button */}

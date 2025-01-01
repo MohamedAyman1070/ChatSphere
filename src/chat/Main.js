@@ -1,25 +1,21 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import TypeBar from "./typeBar/TypeBar";
 import axios from "axios";
 import Message from "./messages/Message";
 import echo from "../echo";
-import useClickOutsideEvent from "../hooks/useClickOutsideEvent";
-import { useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { DataContext } from "../context/DataProvider";
 import CircelSpinner from "../fregments/spinners/CircleSpinner";
+import MessagePlaceholder from "./messages/MessagePlaceholder";
 
 export function Main({ children }) {
-  const { selectedItem } = useContext(DataContext);
+  const { selectedItem, isSendingMessage, setToasts, setUserTyping } =
+    useContext(DataContext);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const main_dev = useRef(null);
-  // console.log(messages);
-  const { slug } = useParams();
-  console.log(slug, selectedItem);
-
   useEffect(() => {
     main_dev.current.scrollTop = main_dev.current.scrollHeight;
-  }, [messages]);
+  }, [messages, isSendingMessage]);
 
   useEffect(() => {
     async function getMessages() {
@@ -31,59 +27,62 @@ export function Main({ children }) {
             socket_id: selectedItem?.socket_id,
           }
         );
-        console.log("messages fetched");
         setMessages((c) => res.data);
+        //if(res.data === '') navigate(-1)
       } catch (err) {
-        console.log(err);
+        setToasts((c) => [...c, err?.response?.data?.message]);
       } finally {
         setIsLoading(false);
       }
     }
 
     getMessages();
-  }, [selectedItem]);
+  }, [selectedItem, setToasts]);
 
   // listen for incoming messages
   useEffect(() => {
     echo
       .join(`message.${selectedItem?.socket_id}`)
       .here((user) => {
-        console.log("socket => ", user);
+        // console.log("socket => ", user);
       })
       .listen(".message-event", (e) => {
         console.log("broadcast");
         setMessages((c) => [...c, e.message]);
       })
       .listenForWhisper("typing", (e) => {
-        // alert("go");
+        setUserTyping(e.user.name);
+      }).listenForWhisper("stoppedTyping", (e) => {
+        setUserTyping('');
       });
-    console.log("listen");
     return () => {
-      console.log("leave");
       echo.leave(`message.${selectedItem?.socket_id}`);
     };
   }, [selectedItem]);
 
   return (
     <div
-      className="
-        flex-col  flex-grow overflow-auto  p-2  bg-roomColor
-        hide-scrollbar
+      className="flex-col  flex-grow overflow-auto   p-2  bg-roomColor
+        hide-scrollbar 
       "
       ref={main_dev}
     >
+      <Outlet />
       {isLoading ? (
         <div className="h-full flex justify-center items-center">
           <CircelSpinner />
         </div>
       ) : (
-        messages.map((m, i) => (
+        messages?.map?.((m, i) => (
           <Message
             message={m}
             key={i}
-            isInGroup={selectedItem.friend === undefined}
+            isInGroup={selectedItem?.friend === undefined}
           />
         ))
+      )}
+      {isSendingMessage && (
+        <MessagePlaceholder isInGroup={selectedItem?.friend === undefined} />
       )}
     </div>
   );

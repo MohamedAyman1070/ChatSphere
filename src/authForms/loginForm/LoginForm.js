@@ -5,6 +5,7 @@ import axios from "axios";
 import { clear } from "@testing-library/user-event/dist/clear";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
+import SimpleCircleSpinner from "../../fregments/spinners/SimpleCircleSpinner";
 
 export default function LoginForm() {
   const { setAuth } = useContext(AuthContext);
@@ -13,6 +14,7 @@ export default function LoginForm() {
   const [passwordError, setPasswordError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   function reset() {
     setErrFromServer("");
@@ -37,6 +39,7 @@ export default function LoginForm() {
     reset();
     async function login() {
       try {
+        setIsLoading(true);
         const res = await axios.post("http://localhost:8000/login", {
           email: email,
           password: password,
@@ -55,12 +58,14 @@ export default function LoginForm() {
         }
       } catch (err) {
         console.log(err.response?.data);
-        if (err.response.data.errors.email) {
+        if (err.response.data.errors?.email) {
           setEmailError(err.response.data.errors.email.pop());
         }
-        if (err.response.data.errors.password) {
+        if (err.response.data.errors?.password) {
           setPasswordError(err.response.data.errors.password.pop());
         }
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -88,7 +93,10 @@ export default function LoginForm() {
           <span className="text-errColor">{errFromServer}</span>
         )}
         <div className="w-full sm:w-2/5 flex flex-col gap-2 place-self-center">
-          <SimpleBtn children={"Login"} onClick={handleLogin} />
+          <SimpleBtn
+            children={isLoading ? <SimpleCircleSpinner /> : "Login"}
+            onClick={handleLogin}
+          />
         </div>
         <span className="text-icons">New to Check ?</span>
       </form>

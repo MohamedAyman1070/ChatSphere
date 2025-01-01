@@ -11,3 +11,13 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  color: #ad0b46;
+}
+.swiper-wrapper {
+  width: 0px !important;
+}
+.swiper {
+  /* width: 50%; */
+}

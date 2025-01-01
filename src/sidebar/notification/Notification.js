@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import Item from "./Item";
 import useClickOutsideEvent from "../../hooks/useClickOutsideEvent";
 import axios from "axios";
+import SimpleCircleSpinner from "../../fregments/spinners/SimpleCircleSpinner";
 
 export default function Notification({
   OnRefetchItems,
@@ -20,7 +21,7 @@ export default function Notification({
         notifyAction({ type: "notify-request-seen" });
         setIsLoading(true);
         const res = await axios.get(
-          "http://localhost:8000/api/request/received"
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/received"
         );
         console.log(res.data);
         setRequests(res.data.data);
@@ -36,7 +37,7 @@ export default function Notification({
     async function acceptRequest() {
       try {
         const res = await axios.post(
-          "http://localhost:8000/api/request/accept",
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/accept",
           {
             request_id: requestObj.id,
           }
@@ -79,12 +80,14 @@ export default function Notification({
       </button>
       {showList && (
         <div
-          className="absolute top-16 left-4  flex items-center  z-50 bg-container p-2 rounded  "
+          className="absolute top-16 left-4 min-w-56 min-h-40   flex items-center  z-50 bg-container p-2 rounded  "
           ref={notificationList}
         >
           <div className="absolute -top-4 w-0 h-0  border-l-[15px] border-b-[20px] border-r-[15px] border-transparent border-b-container "></div>
           {isLoading ? (
-            <p>loading...</p>
+            <div className="flex  w-full justify-center">
+              <SimpleCircleSpinner height="h-10" width="w-10" />
+            </div>
           ) : (
             <>
               <div className="flex flex-col items-center justify-center w-56 gap-1 hide-scrollbar max-h-72 overflow-auto ">
