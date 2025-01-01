@@ -78,7 +78,7 @@ export default function DataProvider({ children }) {
     async function requests() {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/request/received"
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/received"
         );
 
         if (res.data.data.length > 0) {

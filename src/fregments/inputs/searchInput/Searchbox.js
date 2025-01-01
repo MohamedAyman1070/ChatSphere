@@ -18,7 +18,7 @@ export default function Searcbox({}) {
           return;
         }
         const res = await axios.get(
-          `http://localhost:8000/api/search?q=${query}`
+          `${process.env.REACT_APP_BACKEND_DOMAIN}/api/search?q=${query}`
         );
         setResult(res.data?.result);
       } catch (err) {
