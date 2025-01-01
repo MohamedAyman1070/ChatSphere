@@ -22,7 +22,7 @@ export default function RegisterForm() {
     const getCsrf = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/sanctum/csrf-cookie"
+          process.env.REACT_APP_BACKEND_DOMAIN + "/sanctum/csrf-cookie"
         );
       } catch (err) {
         console.log(err);
@@ -36,13 +36,16 @@ export default function RegisterForm() {
     setErrors((currErr) => ({}));
     const register = async () => {
       try {
-        const res = await axios.post("http://localhost:8000/register", {
-          name,
-          email,
-          password,
-          password_confirmation: passwordConfirmation,
-          phone,
-        });
+        const res = await axios.post(
+          process.env.REACT_APP_BACKEND_DOMAIN + "/register",
+          {
+            name,
+            email,
+            password,
+            password_confirmation: passwordConfirmation,
+            phone,
+          }
+        );
         console.log("res: ", res.data);
         setErrors((currErr) => ({
           ...currErr,

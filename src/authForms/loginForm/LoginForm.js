@@ -25,7 +25,9 @@ export default function LoginForm() {
   useEffect(() => {
     const getCsrfToken = async () => {
       try {
-        await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+        await axios.get(
+          process.env.REACT_APP_BACKEND_DOMAIN + "/sanctum/csrf-cookie"
+        );
         console.log("CSRF set");
       } catch (err) {
         console.log(err);
@@ -40,16 +42,19 @@ export default function LoginForm() {
     async function login() {
       try {
         setIsLoading(true);
-        const res = await axios.post("http://localhost:8000/login", {
-          email: email,
-          password: password,
-        });
+        const res = await axios.post(
+          process.env.REACT_APP_BACKEND_DOMAIN + "/login",
+          {
+            email: email,
+            password: password,
+          }
+        );
         if (res.data.status === false) {
           setErrFromServer((curr) => res.data.error);
         } else {
           console.log("ok:", res?.data?.message);
           const user_res = await axios.get(
-            "http://localhost:8000/api/auth/user"
+            process.env.REACT_APP_BACKEND_DOMAIN + "/api/auth/user"
           );
           const user = user_res.data.user;
           sessionStorage.setItem("user", JSON.stringify(user));
