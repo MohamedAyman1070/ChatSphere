@@ -41,6 +41,8 @@ export default function UserInfo() {
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/remove-friend",
         {
           slug: user.slug,
+        },
+        {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("access_token"),
           },

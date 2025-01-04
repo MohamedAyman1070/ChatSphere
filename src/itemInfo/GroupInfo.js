@@ -45,6 +45,8 @@ export default function GroupInfo() {
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/leave-group",
         {
           slug: group.slug,
+        },
+        {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("access_token"),
           },

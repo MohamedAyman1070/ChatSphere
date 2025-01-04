@@ -45,6 +45,8 @@ export default function Notification({
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/accept",
           {
             request_id: requestObj.id,
+          },
+          {
             headers: {
               Authorization: "Bearer " + sessionStorage.getItem("access_token"),
             },
@@ -65,6 +67,8 @@ export default function Notification({
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/reject",
           {
             request_id: requestObj.id,
+          },
+          {
             headers: {
               Authorization: "Bearer " + sessionStorage.getItem("access_token"),
             },

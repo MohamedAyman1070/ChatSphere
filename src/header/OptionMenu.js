@@ -15,6 +15,7 @@ export default function OptionMenu({ OnShow }) {
     try {
       const res = await axios.post(
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/logout",
+        {},
         {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("access_token"),

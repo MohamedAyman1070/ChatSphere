@@ -25,6 +25,8 @@ export function Main({ children }) {
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/chatMessages",
           {
             socket_id: selectedItem?.socket_id,
+          },
+          {
             headers: {
               Authorization: "Bearer " + sessionStorage.getItem("access_token"),
             },
@@ -33,6 +35,7 @@ export function Main({ children }) {
         setMessages((c) => res.data);
         //if(res.data === '') navigate(-1)
       } catch (err) {
+        console.log("error : ", err);
         setToasts((c) => [...c, err?.response?.data?.message]);
       } finally {
         setIsLoading(false);
