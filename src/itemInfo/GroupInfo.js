@@ -18,7 +18,12 @@ export default function GroupInfo() {
       try {
         setIsLoading(true);
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + `/api/groups/${slug}`
+          process.env.REACT_APP_BACKEND_DOMAIN + `/api/groups/${slug}`,
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
         setGroup((g) => res.data.data);
         console.log(res.data);
@@ -38,7 +43,12 @@ export default function GroupInfo() {
     try {
       const res = await axios.post(
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/leave-group",
-        { slug: group.slug }
+        {
+          slug: group.slug,
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
+        }
       );
       OnRefetchItems((c) => !c);
       navigate("/home");
@@ -50,7 +60,12 @@ export default function GroupInfo() {
   async function handleDelete() {
     try {
       const res = await axios.delete(
-        process.env.REACT_APP_BACKEND_DOMAIN + `/api/groups/${group.slug}`
+        process.env.REACT_APP_BACKEND_DOMAIN + `/api/groups/${group.slug}`,
+        {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
+        }
       );
       OnRefetchItems((c) => !c);
       navigate("/home");

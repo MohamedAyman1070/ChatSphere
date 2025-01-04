@@ -109,6 +109,9 @@ export default function Form({ setShowForm }) {
           description: group.description,
           status: group.status,
           image_url: group.image_url,
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
         }
       );
       console.log(res);

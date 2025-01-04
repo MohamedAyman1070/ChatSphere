@@ -88,6 +88,9 @@ export default function TypeBar({}) {
           text: msg,
           socket_id: selectedItem?.socket_id,
           asset_array,
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
         }
       );
       textareaRef.current.style.height = "2.5rem";

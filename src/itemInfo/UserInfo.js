@@ -15,7 +15,12 @@ export default function UserInfo() {
       try {
         setIsLoading(true);
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + `/api/users/${slug}`
+          process.env.REACT_APP_BACKEND_DOMAIN + `/api/users/${slug}`,
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
         setUser(res.data.data);
         console.log("hay", res.data);
@@ -36,6 +41,9 @@ export default function UserInfo() {
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/remove-friend",
         {
           slug: user.slug,
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
         }
       );
       setRefetchItems((c) => !c);

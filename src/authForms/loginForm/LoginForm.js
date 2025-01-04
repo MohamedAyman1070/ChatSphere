@@ -22,19 +22,19 @@ export default function LoginForm() {
     setPasswordError("");
   }
 
-  useEffect(() => {
-    const getCsrfToken = async () => {
-      try {
-        await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/sanctum/csrf-cookie"
-        );
-        console.log("CSRF set");
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getCsrfToken();
-  }, []);
+  // useEffect(() => {
+  //   const getCsrfToken = async () => {
+  //     try {
+  //       await axios.get(
+  //         process.env.REACT_APP_BACKEND_DOMAIN + "/sanctum/csrf-cookie"
+  //       );
+  //       console.log("CSRF set");
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   getCsrfToken();
+  // }, []);
 
   function handleLogin(e) {
     e.preventDefault();
@@ -43,30 +43,37 @@ export default function LoginForm() {
       try {
         setIsLoading(true);
         const res = await axios.post(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/login",
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/login",
           {
             email: email,
             password: password,
           }
         );
+
         if (res.data.status === false) {
           setErrFromServer((curr) => res.data.error);
         } else {
-          console.log("ok:", res?.data?.message);
+          console.log("ok:", res);
+          sessionStorage.setItem("access_token", res.data.access_token);
           const user_res = await axios.get(
-            process.env.REACT_APP_BACKEND_DOMAIN + "/api/auth/user"
+            process.env.REACT_APP_BACKEND_DOMAIN + "/api/auth/user",
+            {
+              headers: {
+                Authorization: "Bearer " + res.data.access_token,
+              },
+            }
           );
-          const user = user_res.data.user;
+          const user = user_res.data;
           sessionStorage.setItem("user", JSON.stringify(user));
           setAuth(user);
           navigate("home");
         }
       } catch (err) {
-        console.log(err.response?.data);
-        if (err.response.data.errors?.email) {
+        console.log("kk ", err);
+        if (err?.response?.data?.errors?.email) {
           setEmailError(err.response.data.errors.email.pop());
         }
-        if (err.response.data.errors?.password) {
+        if (err?.response?.data?.errors?.password) {
           setPasswordError(err.response.data.errors.password.pop());
         }
       } finally {

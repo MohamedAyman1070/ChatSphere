@@ -23,7 +23,13 @@ export default function ImageSlider() {
     async function getMessage() {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + `/api/messages/${message_slug}`
+          process.env.REACT_APP_BACKEND_DOMAIN +
+            `/api/messages/${message_slug}`,
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
         console.log(res);
         setAssets(res.data.data.assets);

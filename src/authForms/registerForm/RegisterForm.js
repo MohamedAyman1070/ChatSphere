@@ -18,18 +18,18 @@ export default function RegisterForm() {
     fromServer: "",
   });
 
-  useEffect(() => {
-    const getCsrf = async () => {
-      try {
-        const res = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/sanctum/csrf-cookie"
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getCsrf();
-  }, []);
+  // useEffect(() => {
+  //   const getCsrf = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         process.env.REACT_APP_BACKEND_DOMAIN + "/sanctum/csrf-cookie"
+  //       );
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   getCsrf();
+  // }, []);
 
   function handleRegister(e) {
     e.preventDefault();
@@ -37,7 +37,7 @@ export default function RegisterForm() {
     const register = async () => {
       try {
         const res = await axios.post(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/register",
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/register",
           {
             name,
             email,

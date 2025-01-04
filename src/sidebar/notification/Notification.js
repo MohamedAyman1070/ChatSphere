@@ -21,7 +21,12 @@ export default function Notification({
         notifyAction({ type: "notify-request-seen" });
         setIsLoading(true);
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/received"
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/received",
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
         console.log(res.data);
         setRequests(res.data.data);
@@ -40,6 +45,9 @@ export default function Notification({
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/accept",
           {
             request_id: requestObj.id,
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
           }
         );
       } catch (err) {
@@ -57,6 +65,9 @@ export default function Notification({
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/reject",
           {
             request_id: requestObj.id,
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
           }
         );
         console.log("Request rejected");

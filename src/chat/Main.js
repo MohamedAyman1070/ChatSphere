@@ -25,6 +25,9 @@ export function Main({ children }) {
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/chatMessages",
           {
             socket_id: selectedItem?.socket_id,
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
           }
         );
         setMessages((c) => res.data);
@@ -52,8 +55,9 @@ export function Main({ children }) {
       })
       .listenForWhisper("typing", (e) => {
         setUserTyping(e.user.name);
-      }).listenForWhisper("stoppedTyping", (e) => {
-        setUserTyping('');
+      })
+      .listenForWhisper("stoppedTyping", (e) => {
+        setUserTyping("");
       });
     return () => {
       echo.leave(`message.${selectedItem?.socket_id}`);

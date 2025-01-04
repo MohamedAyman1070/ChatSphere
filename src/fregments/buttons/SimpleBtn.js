@@ -13,7 +13,7 @@ export default function SimpleBtn({ children, onClick }) {
       transition-transform duration-[380ms]"
       ></span>
 
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 flex justify-center">{children}</span>
     </button>
   );
 }

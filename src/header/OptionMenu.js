@@ -14,10 +14,15 @@ export default function OptionMenu({ OnShow }) {
   async function logout() {
     try {
       const res = await axios.post(
-        process.env.REACT_APP_BACKEND_DOMAIN + "/logoutsdf"
+        process.env.REACT_APP_BACKEND_DOMAIN + "/api/logout",
+        {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
+        }
       );
-      console.log("logged out");
       sessionStorage.removeItem("user");
+      sessionStorage.removeItem("access_token");
       setAuth(null);
       navigate("/");
     } catch (err) {

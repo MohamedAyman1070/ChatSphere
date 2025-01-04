@@ -23,7 +23,12 @@ export default function Header() {
   async function getInvitationURL() {
     try {
       const res = await axios.get(
-        process.env.REACT_APP_BACKEND_DOMAIN + `/api/get-temp-URL/${slug}`
+        process.env.REACT_APP_BACKEND_DOMAIN + `/api/get-temp-URL/${slug}`,
+        {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+          },
+        }
       );
       const tempURL = res.data.TempURL;
       console.log(tempURL);

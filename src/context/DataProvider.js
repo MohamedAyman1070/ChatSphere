@@ -78,7 +78,12 @@ export default function DataProvider({ children }) {
     async function requests() {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/received"
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/request/received",
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
 
         if (res.data.data.length > 0) {
@@ -97,7 +102,12 @@ export default function DataProvider({ children }) {
       try {
         setIsLoadingItems(true);
         const ApiItems = await axios.get(
-          process.env.REACT_APP_BACKEND_DOMAIN + "/api/friends-and-groups"
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/friends-and-groups",
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
         console.log("refetching items");
 
