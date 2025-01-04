@@ -3,7 +3,7 @@ import SimpleBtn from "../../fregments/buttons/SimpleBtn";
 import Textbox from "../../fregments/inputs/Textbox";
 import axios from "axios";
 import { clear } from "@testing-library/user-event/dist/clear";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import SimpleCircleSpinner from "../../fregments/spinners/SimpleCircleSpinner";
 import { echoInit } from "../../echo";
@@ -52,9 +52,10 @@ export default function LoginForm() {
         );
 
         if (res.data.status === false) {
-          setErrFromServer((curr) => res.data.error);
+          setEmailError(res.data.errors?.email?.pop());
+          setPasswordError(res.data.errors?.password?.pop());
         } else {
-          console.log("ok:", res);
+          // console.log("ok:", res);
           sessionStorage.setItem("access_token", res.data.access_token);
           echoInit();
           const user_res = await axios.get(
@@ -71,13 +72,7 @@ export default function LoginForm() {
           navigate("home");
         }
       } catch (err) {
-        console.log("kk ", err);
-        if (err?.response?.data?.errors?.email) {
-          setEmailError(err.response.data.errors.email.pop());
-        }
-        if (err?.response?.data?.errors?.password) {
-          setPasswordError(err.response.data.errors.password.pop());
-        }
+        console.log("err :  ", err);
       } finally {
         setIsLoading(false);
       }
@@ -103,16 +98,18 @@ export default function LoginForm() {
             <span className="text-errColor ">{passwordError}</span>
           )}
         </div>
-        {errFromServer && (
+        {/* {errFromServer && (
           <span className="text-errColor">{errFromServer}</span>
-        )}
+        )} */}
         <div className="w-full sm:w-2/5 flex flex-col gap-2 place-self-center">
           <SimpleBtn
             children={isLoading ? <SimpleCircleSpinner /> : "Login"}
             onClick={handleLogin}
           />
         </div>
-        <span className="text-icons">New to Check ?</span>
+        <Link to={"/register"} className=" w-fit">
+          <span className="text-icons ">New to Check ?</span>
+        </Link>
       </form>
     </div>
   );

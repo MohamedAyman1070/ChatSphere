@@ -30,6 +30,14 @@ function App() {
                 </AuthPage>
               }
             />
+            <Route
+              path="/register"
+              element={
+                <AuthPage>
+                  <RegisterForm />
+                </AuthPage>
+              }
+            />
           </Route>
           <Route
             path="/signup"

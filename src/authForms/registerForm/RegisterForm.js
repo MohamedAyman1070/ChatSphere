@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SimpleBtn from "../../fregments/buttons/SimpleBtn";
 import Textbox from "../../fregments/inputs/Textbox";
 import axios from "axios";
+import { echoInit } from "../../echo";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
+import SimpleCircleSpinner from "../../fregments/spinners/SimpleCircleSpinner";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -9,6 +13,9 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfimation] = useState("");
+  const navigate = useNavigate();
+  const { setAuth } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     name: "",
     phone: "",
@@ -36,26 +43,48 @@ export default function RegisterForm() {
     setErrors((currErr) => ({}));
     const register = async () => {
       try {
+        setIsLoading(true);
+        let data = {
+          name,
+          email,
+          password,
+          password_confirmation: passwordConfirmation,
+        };
+        if (phone.length > 0) {
+          data.number = phone;
+        }
         const res = await axios.post(
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/register",
-          {
-            name,
-            email,
-            password,
-            password_confirmation: passwordConfirmation,
-            phone,
-          }
+          data
         );
-        console.log("res: ", res.data);
-        setErrors((currErr) => ({
-          ...currErr,
-          name: res.data?.errors?.name,
-          email: res.data?.errors?.email,
-          password: res.data?.errors?.password,
-        }));
-        console.log(errors);
+        if (res.data.status === false) {
+          setErrors((currErr) => ({
+            ...currErr,
+            name: res.data?.errors?.name?.pop(),
+            email: res.data?.errors?.email?.pop(),
+            password: res.data?.errors?.password?.pop(),
+            phone: res.data?.errors?.number?.pop(),
+          }));
+        } else {
+          sessionStorage.setItem("access_token", res.data.access_token);
+          echoInit();
+          const user_res = await axios.get(
+            process.env.REACT_APP_BACKEND_DOMAIN + "/api/auth/user",
+            {
+              headers: {
+                Authorization: "Bearer " + res.data.access_token,
+              },
+            }
+          );
+          const user = user_res.data;
+          sessionStorage.setItem("user", JSON.stringify(user));
+          setAuth(user);
+          navigate("home");
+        }
       } catch (err) {
-        console.log(err);
+        console.log("r", err);
+      } finally {
+        setIsLoading(false);
       }
     };
     register();
@@ -100,9 +129,14 @@ export default function RegisterForm() {
           <span className="text-errColor">{errors.fromServer}</span>
         )}
         <div className="w-full sm:w-2/5 flex flex-col gap-2 place-self-center">
-          <SimpleBtn children={"Sign up"} onClick={handleRegister} />
+          <SimpleBtn
+            children={isLoading ? <SimpleCircleSpinner /> : "Sign up"}
+            onClick={handleRegister}
+          />
         </div>
-        <span className="text-icons">Already have an accaount ?</span>
+        <Link to={"/"} className="w-fit">
+          <span className="text-icons">Already have an accaount ?</span>
+        </Link>
       </form>
     </div>
   );
