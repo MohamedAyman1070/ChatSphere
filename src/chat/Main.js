@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Message from "./messages/Message";
-import echo from "../echo";
+import { getEcho } from "../echo";
 import { Outlet } from "react-router-dom";
 import { DataContext } from "../context/DataProvider";
 import CircelSpinner from "../fregments/spinners/CircleSpinner";
@@ -13,6 +13,7 @@ export function Main({ children }) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const main_dev = useRef(null);
+  const echo = getEcho();
   useEffect(() => {
     main_dev.current.scrollTop = main_dev.current.scrollHeight;
   }, [messages, isSendingMessage]);

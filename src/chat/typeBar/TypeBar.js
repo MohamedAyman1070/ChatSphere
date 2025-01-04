@@ -3,7 +3,7 @@ import Textbox from "../../fregments/inputs/Textbox";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { DataContext } from "../../context/DataProvider";
-import echo from "../../echo";
+import { getEcho } from "../../echo";
 import { AuthContext } from "../../context/AuthProvider";
 import { debounce } from "lodash";
 
@@ -14,7 +14,7 @@ export default function TypeBar({}) {
   const [imagesArray, setImagesArray] = useState([]);
   const textareaRef = useRef(null);
   const { auth } = useContext(AuthContext);
-
+  const echo = getEcho();
   useEffect(() => {
     const textarea = textareaRef.current;
     function resizeTextarea() {
@@ -88,6 +88,8 @@ export default function TypeBar({}) {
           text: msg,
           socket_id: selectedItem?.socket_id,
           asset_array,
+        },
+        {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("access_token"),
           },

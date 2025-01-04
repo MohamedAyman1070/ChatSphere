@@ -6,7 +6,7 @@ import {
   useContext,
 } from "react";
 import { AuthContext } from "./AuthProvider";
-import echo from "../echo";
+import { getEcho } from "../echo";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -23,6 +23,7 @@ export default function DataProvider({ children }) {
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [userTyping, setUserTyping] = useState("");
   const { auth } = useContext(AuthContext);
+  const echo = getEcho();
   const user = auth;
   function reducer(notifications, notify) {
     switch (notify.type) {

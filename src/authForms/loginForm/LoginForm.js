@@ -6,6 +6,7 @@ import { clear } from "@testing-library/user-event/dist/clear";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import SimpleCircleSpinner from "../../fregments/spinners/SimpleCircleSpinner";
+import { echoInit } from "../../echo";
 
 export default function LoginForm() {
   const { setAuth } = useContext(AuthContext);
@@ -55,6 +56,7 @@ export default function LoginForm() {
         } else {
           console.log("ok:", res);
           sessionStorage.setItem("access_token", res.data.access_token);
+          echoInit();
           const user_res = await axios.get(
             process.env.REACT_APP_BACKEND_DOMAIN + "/api/auth/user",
             {
