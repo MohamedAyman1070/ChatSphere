@@ -7,9 +7,9 @@ export default function ImageDispalyer({ assets, message_slug }) {
     <>
       {assets.length < 3 ? (
         assets.map((img) => (
-          <div key={img.id} className="rounded">
+          <div key={img.id} className="rounded p-1">
             <Link to={`/home/chat-room/${slug}/display-images/${message_slug}`}>
-              <img src={img.URL} alt="message asset" />
+              <img src={img.URL} alt="message asset" className="rounded" />
             </Link>
           </div>
         ))

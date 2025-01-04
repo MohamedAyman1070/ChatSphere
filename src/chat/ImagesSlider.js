@@ -43,7 +43,7 @@ export default function ImageSlider() {
     getMessage();
   }, [message_slug]);
   return (
-    <div className="flex flex-col top-0 left-0 w-full h-full absolute z-30 bg-black bg-opacity-80  ">
+    <div className="flex flex-col top-0 left-0 w-full h-full absolute z-50 bg-black bg-opacity-80  ">
       {/* close button */}
       <div className="w-full ">
         <button
