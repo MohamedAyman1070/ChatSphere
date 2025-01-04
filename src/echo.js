@@ -10,31 +10,32 @@ const echo = new Echo({
   cluster: process.env.REACT_APP_PUSHER_CLUSTER,
   forceTLS: true,
   encrypted: true,
+  authEndpoint: process.env.REACT_APP_BACKEND_DOMAIN + "/api/broadcasting/auth",
   auth: {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
     },
   },
-  authorizer: (channel, options) => {
-    return {
-      authorize: (socketId, callback) => {
-        axios
-          .post("http://localhost:8000/api/broadcasting/auth", {
-            socket_id: socketId,
-            channel_name: channel.name,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          })
-          .then((response) => {
-            callback(false, response.data);
-          })
-          .catch((error) => {
-            callback(true, error);
-          });
-      },
-    };
-  },
+  // authorizer: (channel, options) => {
+  //   return {
+  //     authorize: (socketId, callback) => {
+  //       axios
+  //         .post("http://localhost:8000/api/broadcasting/auth", {
+  //           socket_id: socketId,
+  //           channel_name: channel.name,
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //           },
+  //         })
+  //         .then((response) => {
+  //           callback(false, response.data);
+  //         })
+  //         .catch((error) => {
+  //           callback(true, error);
+  //         });
+  //     },
+  //   };
+  // },
 });
 
 export default echo;
