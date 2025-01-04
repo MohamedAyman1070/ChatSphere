@@ -5,14 +5,16 @@ import { useContext, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import axios from "axios";
 import { DataContext } from "../../../context/DataProvider";
-
+import SimpleCircleSpinner from "../../spinners/SimpleCircleSpinner";
 export default function Searcbox({}) {
   const [query, setQuery] = useState("");
   const [results, setResult] = useState({ groups: [], users: [] });
   const { setToasts } = useContext(DataContext);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     async function search() {
       try {
+        setIsLoading(true);
         if (query.length < 2) {
           setResult({ groups: [], users: [] });
           return;
@@ -23,6 +25,8 @@ export default function Searcbox({}) {
         setResult(res.data?.result);
       } catch (err) {
         setToasts((c) => [...c, err?.response?.data?.message]);
+      } finally {
+        setIsLoading(false);
       }
     }
     search();
@@ -36,7 +40,12 @@ export default function Searcbox({}) {
         className=" ml-2 bg-textbox text-white outline-none w-full"
         onChange={(e) => debounceChange(e)}
       />
-      {results.users.length > 0 || results.groups.length > 0 ? (
+      {isLoading && (
+        <div className="flex justify-center items-center h-32">
+          <SimpleCircleSpinner />
+        </div>
+      )}
+      {(results.users.length > 0 || results.groups.length > 0) && !isLoading ? (
         <div className=" border-t-2 hide-scrollbar overflow-auto border-t-container p-2  flex flex-col gap-2  w-full">
           {results.users.map((user) => (
             <Item

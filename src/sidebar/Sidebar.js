@@ -30,7 +30,7 @@ export default function Sidebar() {
     ? "bg-headerColor  p-6 flex justify-between "
     : "bg-headerColor  p-4 flex justify-between ";
   const sidebarStyle = selectedItem
-    ? "flex flex-col sm:static fixed z-40 h-full sm:mt-0  mt-16 sm:w-96 w-full  "
+    ? "flex flex-col  sm:static fixed z-40 h-full sm:mt-0  mt-16 sm:w-96 w-full  "
     : "flex flex-col sm:static fixed h-full  sm:mt-0 mt-12 sm:w-96 w-full  ";
   return (
     <motion.div
@@ -66,10 +66,7 @@ export default function Sidebar() {
         </div>
       )}
       {/* items list*/}
-      <div
-        className="flex flex-col h-full   bg-customBlue overflow-auto 
-    hide-scrollbar"
-      >
+      <div className="flex flex-col h-full sm:mb-0 mb-12 bg-customBlue overflow-auto hide-scrollbar ">
         {isLoadingItems ? (
           <div className="flex justify-center items-center h-full">
             <SimpleCircleSpinner width="w-20" height="h-20" />

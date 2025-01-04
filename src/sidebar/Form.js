@@ -51,12 +51,13 @@ export default function Form({ setShowForm }) {
   }
 
   async function uploadImage() {
-    if (image.size > 1024 * 1024) {
+    if (image.size > 1024 * 1024 * 2) {
       //2mb
       dispatch({
         type: "imageError",
         errorMsg: "image size must be less than 2 mb",
       });
+      return false;
     }
     const formData = new FormData();
     formData.append("file", image);
@@ -102,6 +103,7 @@ export default function Form({ setShowForm }) {
         return;
       }
       group.image_url = await uploadImage();
+      if (group.image_url === false) return;
       const res = await axios.post(
         process.env.REACT_APP_BACKEND_DOMAIN + "/api/groups",
         {
@@ -116,13 +118,13 @@ export default function Form({ setShowForm }) {
           },
         }
       );
-      console.log(res);
       OnRefetchItems((c) => !c);
       setShowForm(false);
     } catch (err) {
       console.log(err);
       const errors = err?.response.data.errors;
       for (let attr in errors) {
+        if (attr === "image_url") continue;
         dispatch({ type: attr + "Error", errorMsg: errors[attr].pop() });
       }
     } finally {

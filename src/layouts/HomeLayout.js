@@ -25,7 +25,6 @@ export default function HomeLayout() {
     }
     OnSelectItem(selected);
   }, [slug, OnSelectItem, items]);
-
   return (
     <div className="grid grid-cols-1 h-screen bg-slate-600">
       <div className="flex h-full  overflow-auto ">

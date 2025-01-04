@@ -92,7 +92,7 @@ export default function Header() {
             ) : (
               ""
             )}
-            <div className="relative ">
+            {/* <div className="relative ">
               <button
                 className="p-2 cursor-pointer"
                 onClick={() => setShowOptionMenue((curr) => !curr)}
@@ -102,7 +102,7 @@ export default function Header() {
               <AnimatePresence>
                 {showOptionMenue && <OptionMenu OnShow={setShowOptionMenue} />}
               </AnimatePresence>
-            </div>
+            </div> */}
           </div>
         </div>
       ) : (
@@ -112,6 +112,17 @@ export default function Header() {
           </div>
         </div>
       )}
+      <div className="relative ">
+        <button
+          className="p-2 cursor-pointer"
+          onClick={() => setShowOptionMenue((curr) => !curr)}
+        >
+          <i className="fa-solid fa-ellipsis-vertical fa-xl text-icons "></i>
+        </button>
+        <AnimatePresence>
+          {showOptionMenue && <OptionMenu OnShow={setShowOptionMenue} />}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
