@@ -61,5 +61,8 @@ export function echoInit() {
 // });
 
 export function getEcho() {
+  if (echo === null) {
+    echoInit();
+  }
   return echo;
 }
