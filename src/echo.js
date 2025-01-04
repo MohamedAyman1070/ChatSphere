@@ -20,16 +20,13 @@ const echo = new Echo({
     return {
       authorize: (socketId, callback) => {
         axios
-          .post(
-            process.env.REACT_APP_BACKEND_DOMAIN + "/api/broadcasting/auth",
-            {
-              socket_id: socketId,
-              channel_name: channel.name,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-              },
-            }
-          )
+          .post(process.env.REACT_APP_BACKEND_DOMAIN + "/broadcasting/auth", {
+            socket_id: socketId,
+            channel_name: channel.name,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          })
           .then((response) => {
             callback(false, response.data);
           })
