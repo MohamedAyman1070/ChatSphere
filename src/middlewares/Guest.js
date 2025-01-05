@@ -4,6 +4,5 @@ import { AuthContext } from "../context/AuthProvider";
 
 export default function Guest() {
   const { auth } = useContext(AuthContext);
-  console.log('guest : ' , auth)
   return auth !== null ? <Navigate to="home" /> : <Outlet />;
 }

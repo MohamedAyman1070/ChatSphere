@@ -20,8 +20,10 @@ export default function Header() {
   const { slug } = useParams();
   const [isCopied, setIsCopied] = useState(false);
   const { auth } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   async function getInvitationURL() {
     try {
+      setIsLoading(true);
       const res = await axios.get(
         process.env.REACT_APP_BACKEND_DOMAIN + `/api/get-temp-URL/${slug}`,
         {
@@ -31,18 +33,19 @@ export default function Header() {
         }
       );
       const tempURL = res.data.TempURL;
-      console.log(tempURL);
       const params = tempURL
-        .split(process.env.REACT_APP_BACKEND_DOMAIN + "/api/join-group/")
+        .split(process.env.REACT_APP_BACKEND_DOMAIN + "/join-group/")
         .pop();
+
       const URL =
         process.env.REACT_APP_FRONTEND_DOMAIN +
         "/home/group-invitation/" +
         params;
-      console.log(URL);
       navigator.clipboard.writeText(URL).then(() => setIsCopied(true));
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -80,9 +83,18 @@ export default function Header() {
             {selectedItem.friend === undefined &&
             selectedItem?.relations?.admin.slug === auth.slug ? (
               <div className="flex gap-2">
-                <button className="" onClick={getInvitationURL}>
-                  <i className="fa-solid fa-link text-icons"></i>
-                </button>
+                {isLoading ? (
+                  <span className="flex gap-2 items-center">
+                    <i className="fa-solid fa-link text-icons"></i>
+                    <p className="text-plum animate-pulse text-sm">
+                      loading ...
+                    </p>
+                  </span>
+                ) : (
+                  <button className="" onClick={getInvitationURL}>
+                    <i className="fa-solid fa-link text-icons"></i>
+                  </button>
+                )}
                 {isCopied ? (
                   <p className="text-normalTextColor text-sm">copied</p>
                 ) : (
