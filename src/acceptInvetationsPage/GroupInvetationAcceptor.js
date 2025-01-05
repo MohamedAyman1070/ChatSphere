@@ -21,7 +21,12 @@ export default function GroupInvetationAcceptor() {
             param +
             `?expires=${searchParams.get(
               "expires"
-            )}&signature=${searchParams.get("signature")}`
+            )}&signature=${searchParams.get("signature")}`,
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
         );
         console.log(res);
         navigate(`/home/chat-room/${param}`);
