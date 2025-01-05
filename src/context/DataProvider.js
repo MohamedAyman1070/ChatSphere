@@ -110,7 +110,8 @@ export default function DataProvider({ children }) {
             },
           }
         );
-        console.log("refetching items " , ApiItems);
+        console.log("refetching items : ", ApiItems);
+        console.log("type : ", typeof ApiItems);
         setItems((c) => ApiItems.data);
         // console.log(ApiItems);
       } catch (err) {
