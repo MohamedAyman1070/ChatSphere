@@ -1,13 +1,9 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-// import "swiper/swiper-bundle.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination, A11y } from "swiper/modules";
-import useClickOutsideEvent from "../hooks/useClickOutsideEvent";
 import CircelSpinner from "../fregments/spinners/CircleSpinner";
 export default function ImageSlider() {
   const { message_slug } = useParams();
@@ -31,9 +27,7 @@ export default function ImageSlider() {
             },
           }
         );
-        console.log(res);
         setAssets(res.data.data.assets);
-        console.log(assets);
       } catch (err) {
         console.log(err);
       } finally {
