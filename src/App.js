@@ -64,7 +64,23 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="*" element={<p>this device can't be</p>} />
+          <Route
+            path="*"
+            element={
+              <div
+                className="bg-gradient-to-br  from-plum to-customBlue 
+                  grid grid-cols-1
+                  h-screen items-center place-items-center"
+              >
+                <p
+                  className=" text-4xl text-black "
+                  style={{ fontFamily: "Monoton" }}
+                >
+                  404 Not Fount
+                </p>
+              </div>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>
