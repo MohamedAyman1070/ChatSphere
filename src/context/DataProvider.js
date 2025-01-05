@@ -110,10 +110,16 @@ export default function DataProvider({ children }) {
             },
           }
         );
-        console.log("refetching items : ", ApiItems);
-        console.log("type : ", typeof ApiItems);
         setItems((c) => ApiItems.data);
-        // console.log(ApiItems);
+        const ApiItems2 = await axios.get(
+          process.env.REACT_APP_BACKEND_DOMAIN + "/api/friends-and-groups",
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+            },
+          }
+        );
+        setItems((c) => ApiItems2.data);
       } catch (err) {
         setToasts((c) => [...c, err?.response?.data?.message]);
       } finally {
