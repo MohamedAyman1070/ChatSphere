@@ -11,7 +11,7 @@ export default function TextExpander({ children }) {
     setExpand((c) => !c);
   }
   return (
-    <div className="break-words p-2 ">
+    <div className="break-words p-2 ml-1 ">
       <div className="  text-wrap whitespace-pre-wrap">
         <Linkify options={{ className: "text-blue-700" }}>
           <div>

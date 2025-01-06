@@ -9,6 +9,7 @@ export default function GroupInvetationAcceptor() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!param) return;
     async function acceptInvetation() {
@@ -17,7 +18,7 @@ export default function GroupInvetationAcceptor() {
         setError("");
         const res = await axios.get(
           process.env.REACT_APP_BACKEND_DOMAIN +
-            "/api/join-group/" +
+            "/join-group/" +
             param +
             `?expires=${searchParams.get(
               "expires"

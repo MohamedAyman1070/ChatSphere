@@ -33,6 +33,7 @@ export default function Header() {
         }
       );
       const tempURL = res.data.TempURL;
+      console.log(tempURL);
       const params = tempURL
         .split(process.env.REACT_APP_BACKEND_DOMAIN + "/join-group/")
         .pop();
@@ -41,6 +42,7 @@ export default function Header() {
         process.env.REACT_APP_FRONTEND_DOMAIN +
         "/home/group-invitation/" +
         params;
+      console.log(URL);
       navigator.clipboard.writeText(URL).then(() => setIsCopied(true));
     } catch (err) {
       console.log(err);
