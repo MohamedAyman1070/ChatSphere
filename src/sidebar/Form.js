@@ -51,11 +51,11 @@ export default function Form({ setShowForm }) {
   }
 
   async function uploadImage() {
-    if (image.size > 1024 * 1024 * 2) {
-      //2mb
+    if (image.size > 1024 * 1024 * 5) {
+      //5mb
       dispatch({
         type: "imageError",
-        errorMsg: "image size must be less than 2 mb",
+        errorMsg: "image size must be less than 5 mb",
       });
       return false;
     }

@@ -29,11 +29,11 @@ export default function TypeBar({}) {
   }, []);
 
   async function uploadImage(image) {
-    if (image.size > 1024 * 1024 * 2) {
-      //2mb
+    if (image.size > 1024 * 1024 * 5) {
+      //5mb
       //dispatch a toast
-      setToasts((c) => [...c, "image size must be less than or equal to 2mb"]);
-      return;
+      setToasts((c) => [...c, "image size must be less than or equal to 5mb"]);
+      return ""; //corrupted image
     }
     const formData = new FormData();
     formData.append("file", image);
