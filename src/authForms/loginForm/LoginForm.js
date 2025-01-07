@@ -108,7 +108,7 @@ export default function LoginForm() {
           />
         </div>
         <Link to={"/register"} className=" w-fit">
-          <span className="text-icons ">New to Check ?</span>
+          <span className="text-normalTextColor ">New to Check ?</span>
         </Link>
       </form>
     </div>

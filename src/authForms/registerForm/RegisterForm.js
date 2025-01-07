@@ -98,7 +98,7 @@ export default function RegisterForm() {
           {errors?.name && <span className="text-errColor">{errors.name}</span>}
         </div>
         <div>
-          <span className="text-sm text-gray-600">(opotinal)</span>
+          <span className="text-sm text-normalTextColor">(optional)</span>
           <Textbox placeholder={"phone ..."} setState={setPhone} />
           {errors?.phone && (
             <span className="text-errColor">{errors.phone}</span>
@@ -135,7 +135,9 @@ export default function RegisterForm() {
           />
         </div>
         <Link to={"/"} className="w-fit">
-          <span className="text-icons">Already have an accaount ?</span>
+          <span className="text-normalTextColor">
+            Already have an accaount ?
+          </span>
         </Link>
       </form>
     </div>
