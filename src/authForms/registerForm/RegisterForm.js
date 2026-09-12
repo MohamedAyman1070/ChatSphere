@@ -55,7 +55,7 @@ export default function RegisterForm() {
         }
         const res = await axios.post(
           process.env.REACT_APP_BACKEND_DOMAIN + "/api/register",
-          data
+          data,
         );
         if (res.data.status === false) {
           setErrors((currErr) => ({
@@ -74,7 +74,7 @@ export default function RegisterForm() {
               headers: {
                 Authorization: "Bearer " + res.data.access_token,
               },
-            }
+            },
           );
           const user = user_res.data;
           sessionStorage.setItem("user", JSON.stringify(user));
@@ -136,7 +136,7 @@ export default function RegisterForm() {
         </div>
         <Link to={"/"} className="w-fit">
           <span className="text-normalTextColor">
-            Already have an accaount ?
+            Already have an account ?
           </span>
         </Link>
       </form>
