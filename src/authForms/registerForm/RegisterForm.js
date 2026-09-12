@@ -48,6 +48,7 @@ export default function RegisterForm() {
           name,
           email,
           password,
+          imgUrl: name,
           password_confirmation: passwordConfirmation,
         };
         if (phone.length > 0) {
