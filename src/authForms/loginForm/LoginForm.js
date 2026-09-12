@@ -48,7 +48,7 @@ export default function LoginForm() {
           {
             email: email,
             password: password,
-          }
+          },
         );
 
         if (res.data.status === false) {
@@ -64,7 +64,7 @@ export default function LoginForm() {
               headers: {
                 Authorization: "Bearer " + res.data.access_token,
               },
-            }
+            },
           );
           const user = user_res.data;
           sessionStorage.setItem("user", JSON.stringify(user));
@@ -108,7 +108,7 @@ export default function LoginForm() {
           />
         </div>
         <Link to={"/register"} className=" w-fit">
-          <span className="text-normalTextColor ">New to Check ?</span>
+          <span className="text-normalTextColor ">New to ChatSphere ?</span>
         </Link>
       </form>
     </div>
