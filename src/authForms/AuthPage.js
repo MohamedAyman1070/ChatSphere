@@ -8,7 +8,7 @@ export default function AuthPage({ children }) {
     >
       <div className="m-auto">
         <img
-          src="https://images.rawpixel.com/image_png_400/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png"
+          src="https://res.cloudinary.com/drm3bzgpi/image/upload/v1789231366/user_gufcpx.png"
           alt="user"
           className="w-40 h-40 rounded object-cover"
         />
