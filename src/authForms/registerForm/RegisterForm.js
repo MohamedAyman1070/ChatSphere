@@ -6,6 +6,7 @@ import { echoInit } from "../../echo";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 import SimpleCircleSpinner from "../../fregments/spinners/SimpleCircleSpinner";
+import multiavatar from "@multiavatar/multiavatar/esm";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -40,6 +41,7 @@ export default function RegisterForm() {
 
   function handleRegister(e) {
     e.preventDefault();
+    let svgCode = multiavatar(name);
     setErrors((currErr) => ({}));
     const register = async () => {
       try {
@@ -48,7 +50,7 @@ export default function RegisterForm() {
           name,
           email,
           password,
-          imgUrl: name,
+          imgUrl: svgCode,
           password_confirmation: passwordConfirmation,
         };
         if (phone.length > 0) {
