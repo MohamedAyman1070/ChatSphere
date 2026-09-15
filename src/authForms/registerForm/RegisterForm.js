@@ -42,6 +42,7 @@ export default function RegisterForm() {
   function handleRegister(e) {
     e.preventDefault();
     let svgCode = multiavatar(name);
+    console.log(svgCode);
     setErrors((currErr) => ({}));
     const register = async () => {
       try {
